@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Login & Daftar</title>
+  <style>
+    body {
+      background-image: url('mahesa.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .switch {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .switch a {
+      color: #00f;
+      cursor: pointer;
+    }
+
+    #registerForm {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Form Login -->
+    <form id="loginForm" onsubmit="return checkLogin(event)">
+      <h2>Login</h2>
+      <input type="text" id="loginId" placeholder="Nomor HP atau Email" required>
+      <input type="password" id="loginPass" placeholder="Password" required>
+      <button type="submit">Login</button>
+      <div class="switch">Belum punya akun? <a onclick="toggleForm()">Daftar di sini</a></div>
+    </form>
+
+    <!-- Form Daftar -->
+    <form id="registerForm" onsubmit="return goToSuccess(event)">
+      <h2>Daftar</h2>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="tel" id="phone" placeholder="Nomor HP" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Daftar</button>
+      <div class="switch">Sudah punya akun? <a onclick="toggleForm()">Login di sini</a></div>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('registerForm').style.display = 'none';
+    });
+
+    function toggleForm() {
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+      registerForm.style.display = registerForm.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function validateForm() {
+      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+      const phoneRegex = /^[0-9]{10,15}$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!phoneRegex.test(phone)) {
+        alert("Nomor HP harus 10–15 digit angka.");
+        return false;
+      }
+      if (!emailRegex.test(email)) {
+        alert("Format email tidak valid.");
+        return false;
+      }
+      return true;
+    }
+
+    function goToSuccess(e) {
+      e.preventDefault();
+      if (validateForm()) {
+        const newUser = {
+          username: document.getElementById('username').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value.trim()
+        };
+        const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+        const isDuplicate = users.some(u => u.email === newUser.email || u.phone === newUser.phone);
+        if (isDuplicate) {
+          alert("Email atau nomor HP sudah digunakan!");
+          return false;
+        }
+        users.push(newUser);
+        localStorage.setItem("registeredUsers", JSON.stringify(users));
+        alert("Pendaftaran berhasil, silakan login.");
+        toggleForm();
+      }
+      return false;
+    }
+
+    function checkLogin(e) {
+      e.preventDefault();
+      const loginId = document.getElementById('loginId').value.trim();
+      const loginPass = document.getElementById('loginPass').value.trim();
+      const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+      const matchedUser = users.find(user =>
+        (user.email === loginId || user.phone === loginId) && user.password === loginPass
+      );
+      if (matchedUser) {
+        localStorage.setItem("loggedInUser", JSON.stringify(matchedUser));
+        alert("Login berhasil!");
+        window.location.href = "beranda.html";
+      } else {
+        alert("Login gagal! Email/HP atau password salah.");
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>

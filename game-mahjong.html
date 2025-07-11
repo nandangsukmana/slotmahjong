@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Mahjong Ways - Demo</title>
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('mahjong.jpg');
+      background-size: cover;
+      background-position: center;
+      font-family: sans-serif;
+      text-align: center;
+      color: white;
+      padding-top: 100px;
+    }
+    button {
+      background-color: gold;
+      color: black;
+      font-size: 20px;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎰 Mahjong Ways 🎰</h1>
+  <p>Tekan tombol di bawah untuk mulai dan putar musik</p>
+
+  <button onclick="startGame()">Mainkan Sekarang</button>
+
+  <audio id="bgm" loop>
+    <source src="mahjong.mp3" type="audio/mpeg">
+    Browser tidak mendukung audio
+  </audio>
+
+  <script>
+    function startGame() {
+      let musik = document.getElementById("bgm");
+      musik.play();
+      // Ganti link ini sesuai kebutuhan
+      window.open("https://barbar77.ac/hotroom/pgsoft.php?gs=65&e=1&rfs=1");
+    }
+  </script>
+
+</body>
+</html>
